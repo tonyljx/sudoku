@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { getSudoku } from "sudoku-gen";
+import dayjs from "dayjs";
 
 interface IGameState {
   id: string;
@@ -14,6 +15,7 @@ interface IGameState {
   initialBoard: string;
   solutionBoard: string;
   difficulty: string;
+  createdAt: string;
   // createdAt
   actions: {
     id: number;
@@ -29,7 +31,8 @@ export default function Home() {
   const [generating, setGenerating] = useState(false);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [gameIds, setGameIds] = useState<string[]>();
+  // const [gameIds, setGameIds] = useState<string[]>();
+  const [games, setGames] = useState<IGameState[]>();
 
   useEffect(() => {
     async function fetchRemote() {
@@ -49,8 +52,9 @@ export default function Home() {
         return;
       }
       const gameData: IGameState[] = await data.json();
-      const gameIds = gameData.map((item) => item.id);
-      setGameIds(gameIds);
+      // const gameIds = gameData.map((item) => item.id);
+      // setGameIds(gameIds);
+      setGames(gameData);
     }
     fetchRemote();
   }, []);
@@ -116,17 +120,53 @@ export default function Home() {
         {loading ? (
           <LoaderIcon className="animate-spin text-violet-300" />
         ) : (
-          <div className="flex flex-col gap-3">
-            {gameIds?.map((item) => (
-              <Link
-                className="hover:text-violet-500 transition-colors duration-150"
-                key={item}
-                href={`/${item}`}
-              >
-                {item}
-              </Link>
-            ))}
-          </div>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Time
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Link
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {games?.map((item) => (
+                <tr key={item.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {dayjs(item.createdAt).format("YYYY/MM/DD")}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <Link
+                      className="text-violet-600 hover:text-violet-900"
+                      href={`/${item.id}`}
+                    >
+                      {item.id}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          // <div className="flex flex-col gap-3">
+          //   <div className="flex gap-2">
+          //     <span>Time</span>
+          //     <span>Link</span>
+          //   </div>
+          //   {games?.map((item) => (
+          //     <div key={item.id} className="flex gap-2">
+          //       <span>{item.createdAt}</span>
+          //       <Link
+          //         className="hover:text-violet-500 transition-colors duration-150"
+          //         href={`/${item.id}`}
+          //       >
+          //         {item.id}
+          //       </Link>
+          //     </div>
+          //   ))}
+          // </div>
         )}
       </div>
       <Toaster />
