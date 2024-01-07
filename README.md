@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+# feature
+
+2024 年 01 月 01 日
+
+- 支持基本数独游戏判断
+  - 样式: focus:bg-slate-100 输入的时候添加背景颜色, 置灰
+- 支持撤回:
+  - 考虑加入 dom ref, 这样可以在撤回的时候聚焦到撤回的节点
